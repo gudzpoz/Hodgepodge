@@ -5,6 +5,6 @@
 <html>
   <head></head>
   <body>
-    <h1><?php echo sizeof(false); ?></h1>
+    <h1><?php echo("Hello!"); ?></h1>
   </body>
 </html>

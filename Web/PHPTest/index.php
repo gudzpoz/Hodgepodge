@@ -13,7 +13,7 @@
       }
     ?>
     <script type="text/javascript" src="index.js"></script>
-    <script type="text/javascript" src="src/ace.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace.js"></script>
     <style>
       body {
         background-color: #f0f8ff;
