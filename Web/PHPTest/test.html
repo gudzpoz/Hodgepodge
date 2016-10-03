@@ -1,0 +1,13 @@
+<html>
+  <head>
+    <title>Test Page for ACE Editor</title>
+  </head>
+  <script src="src/ace.js" type="text/javascript"></script>
+  <body>
+    <div id="code"></div>
+    <script>
+      var editor = ace.edit("code");
+      editor.getSession().setMode("ace/mode/php");
+    </script>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+html
+{
+	background-color: #f0f8ff;
+	margin: 0;
+	padding: 0;
+	border-color: #f5fffa;
+	border-width: 4mm;
+	border-bottom-style: solid;
+}
+
+body.__header__
+{
+	text-align: left;
+	vertical-align: middle;
+}
+body.__header__>ul
+{
+	display: block;
+	height: 100%;
+}
+
+body.__header__>ul>li
+{
+	float: left;
+	list-style: none;
+	padding-right: 3%;
+}

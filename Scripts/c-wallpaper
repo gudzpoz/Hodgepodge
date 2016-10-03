@@ -1,0 +1,123 @@
+#!/usr/bin/perl 
+use utf8;
+use Getopt::Long;
+
+GetOptions(
+	'desktop=s'	=>	\$desktop,
+	'kill!'		=>	\$kill,
+	'path=s@'	=>	\@paths,
+	'reset!'	=>	\$reset,
+	'time=i'	=>	\$time,
+);
+
+$desktop = lc $desktop;
+$progname = 'c-wallpaper';
+
+if($reset)
+{
+	my $file = (glob "/tmp/$progname.*")[0];
+	`rm $file`;
+}
+
+if(-e (glob "/tmp/$progname.*")[0] && !$kill)
+{
+	die "c-wallpaper: running already\n";
+}
+
+if($kill)
+{
+	my $file = (glob "/tmp/$progname.*")[0];
+	`rm $file`;
+	exit(0);
+}
+
+$tmpfile = "$progname.$$";
+`touch /tmp/$tmpfile`;
+
+$SIG{INT} = \&signal_handler;
+$SIG{TERM} = \&signal_handler;
+$SIG{HUP} = \&signal_handler;
+
+sub getPath
+{
+	if($desktop eq 'gnome')
+	{
+		return `gsettings get org.gnome.desktop.background picture-uri`;
+	}
+	elsif($desktop eq 'xfce')
+	{
+		my $path;
+		$path = `xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/image-path`;
+		if($path ne '')
+		{	return $path; }
+		$path = `xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitoreDP/workspace0/last-image`;
+		if($path ne '')
+		{	return $path; }	
+		$path = `xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitoreDP1/workspace0/last-image`;
+		if($path ne '')
+		{	return $path; }
+		$path = `xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorLVDS/workspace0/last-image`;
+		if($path ne '')
+		{	return $path; }
+		$path = `xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorLVDS1/workspace0/last-image`;
+		if($path ne '')
+		{	return $path; }
+		return '';
+	}
+}
+
+sub setPath
+{
+	my $path;
+	$path = $_[0];
+	
+	if($desktop eq 'gnome')
+	{
+		`gsettings set org.gnome.desktop.background picture-uri 'file://$path'`;
+	}
+	elsif($desktop eq 'xfce')
+	{
+		`xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/image-path -n -t string -s '$path'`;
+		`xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorLVDS/workspace0/last-image -n -t string -s '$path'`;
+		# print "xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorLVDS1/workspace0/last-image -n -t string -s '$path'";
+		`xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorLVDS1/workspace0/last-image -n -t string -s '$path'`;
+	}
+}
+
+sub signal_handler
+{
+	setPath($base);
+	`rm '/tmp/$tmpfile'`;
+	exit 0;
+}
+
+foreach(@paths)
+{
+	if(-d $_)
+	{
+		@pics = (@pics, split(/\n/,
+				`find '$_' -type f`));
+	}
+	else
+	{
+		@pics = (@pics, $_);
+	}
+}
+
+$base = getPath();
+print $$;
+
+while(1)
+{
+	$r = rand(@pics);
+	print "$pics[$r]\n";
+	setPath($pics[$r]);
+	sleep $time;
+	unless(-e "/tmp/$tmpfile")
+	{
+		setPath($base);
+		print "exiting\n";
+		exit(0);
+	}
+}
+

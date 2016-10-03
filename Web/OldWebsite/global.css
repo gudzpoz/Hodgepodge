@@ -1,0 +1,31 @@
+html
+{
+	font-family: "Fira Sans", "Source Sans Pro", Helvetica, Arial, sans-serif;
+	color: #000000;
+	background-color: #ffffff;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+body
+{
+	background-color: #f0f8ff;
+	padding: 2%;
+}
+
+object[data$="header.html"]
+{
+	width: 100%;
+	vertical-align: text-top;
+}
+
+div>object[data$="header.html"]
+{
+	padding: 0;
+	margin: 0;
+}
+
+h1,h2
+{
+	text-align: center;
+}

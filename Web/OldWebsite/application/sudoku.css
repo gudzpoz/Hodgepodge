@@ -1,0 +1,68 @@
+table
+{
+	margin-left: auto;
+	margin-right: auto;
+	font-size: 3ex;
+	font-weight: lighter;
+}
+
+td
+{
+	text-align: right;
+	border-width: 1px;
+	border-top-style: solid;
+	border-top-color: #000000;
+}
+
+td.left_border
+{
+	border-left-style: solid;
+	border-left-color: #000000;
+	border-right-style: solid;
+	border-right-color: #000000;
+}
+
+input
+{
+	font-size: 1em;
+	text-align: center;
+	width: 2em;
+}
+
+input#rand
+{
+	width: 10em;
+}
+
+input#timer
+{
+	font-size: 2em;
+	width: 4em;
+	
+}
+
+ul
+{
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	list-style-type: disc;
+}
+
+li
+{
+	text-align: center;
+}
+
+ul.code>li
+{
+	display: inline;
+	width: auto;
+}
+
+div#info
+{
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}

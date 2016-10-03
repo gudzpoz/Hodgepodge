@@ -1,0 +1,68 @@
+td>img
+{
+	width: 96px;
+	height: 96px;
+}
+
+table
+{
+	margin-left: auto;
+	margin-right: auto;
+	font-size: 3ex;
+	font-weight: lighter;
+}
+
+td
+{
+	text-align: center;
+	border-width: 1px;
+	border-top-style: solid;
+	border-top-color: #000000;
+}
+
+input
+{
+	font-size: 1em;
+	width: 5em;
+	text-align: center;
+	border-width: 1px;
+	border-right-style: solid;
+	border-right-color: #000000;
+	border-left-style: solid;
+	border-left-color: #000000;
+}
+
+button
+{
+	font-size: 1ex;
+	height: 3em;
+}
+
+ul
+{
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	list-style-type: disc;
+}
+
+li
+{
+	text-align: center;
+}
+
+ul.code>li
+{
+	display: inline;
+	width: auto;
+}
+
+div.tool
+{
+	text-align: center;
+}
+
+div#body
+{
+	text-align: center;
+}

@@ -1,0 +1,30 @@
+html
+{
+	background-color: #f0f8ff;
+	margin: 0;
+	padding: 0;
+	border-color: #f5fffa;
+	border-width: 4mm;
+	border-bottom-style: solid;
+}
+
+body.__header__
+{
+	text-align: left;
+	vertical-align: middle;
+}
+body.__header__>ul
+{
+	display: inline-block;
+	height: 100%;
+}
+
+body.__header__>ul>li
+{
+	display: inline-block;
+}
+
+ul.__header__>li+li:before
+{
+	content: "\20|\20";
+}
