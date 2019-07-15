@@ -1,6 +1,10 @@
 package moe.gensokyoradio.liberty;
 
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiUnavailableException;
 import javax.swing.JOptionPane;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Sequencer;
 import java.awt.TrayIcon;
 import java.awt.SystemTray;
 import java.awt.event.MouseEvent;
@@ -8,9 +12,52 @@ import java.awt.event.MouseListener;
 import java.awt.AWTException;
 import java.awt.Toolkit;
 import java.awt.Image;
-import java.awt.Canvas;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class EyeCandy {
+    private class NotificationSound {
+        private Sequencer sequencer;
+
+        NotificationSound() throws MidiUnavailableException {
+            sequencer = MidiSystem.getSequencer();
+        }
+        private void play(String filename) {
+            if(sequencer == null) {
+                System.err.println("No midi system available");
+                return;
+            }
+            Thread thread = new Thread(() -> {
+                if(sequencer == null) {
+                    System.err.println("No midi system available.");
+                }
+                try {
+                    sequencer.setSequence(new FileInputStream(filename));
+                    sequencer.open();
+                    sequencer.start();
+                    Thread.sleep(2000);
+                    sequencer.close();
+                } catch (InvalidMidiDataException | FileNotFoundException e) {
+                    System.err.println("File invalid. Please check program integrity.");
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                    sequencer.close();
+                } catch (MidiUnavailableException e) {
+                    sequencer.close();
+                }
+            });
+            thread.run();
+        }
+        void notice() {
+            String notice = "moe/gensokyoradio/liberty/Notice.mid";
+            play(notice);
+        }
+        void warn() {
+            String warn = "moe/gensokyoradio/liberty/Warn.mid";
+            play(warn);
+        }
+    }
     public static void main(String[] args) {
         long workDuration = 20 * 60 * 1000;
         long restDuration = 20;
@@ -45,12 +92,18 @@ public class EyeCandy {
 
     private long workDuration;
     private long restDuration;
+    private NotificationSound sound;
     private boolean workSkipped = false;
-    TrayIcon icon = null;
-    public EyeCandy(long workDuration, long restDuration) {
+    private TrayIcon icon = null;
+    private EyeCandy(long workDuration, long restDuration) {
         this.workDuration = workDuration;
         this.restDuration = restDuration;
         this.initializeSystemTray();
+        try {
+            this.sound = new NotificationSound();
+        } catch (MidiUnavailableException e) {
+            // ok if unavailable
+        }
     }
     private void initializeSystemTray() {
         if (SystemTray.isSupported()) {
@@ -77,13 +130,13 @@ public class EyeCandy {
             try {
                 tray.add(this.icon);
             } catch (AWTException e) {
-                System.err.println(e);
+                e.printStackTrace();
             }
         } else {
             this.icon = null;
         }
     }
-    public void start() {
+    private void start() {
         while(true) {
             for(int i = 0; i != this.workDuration; ++i) {
                 this.sleepASecond();
@@ -102,6 +155,7 @@ public class EyeCandy {
         }
     }
     private void remind() {
+        sound.notice();
         JOptionPane.showMessageDialog(null, "Please go for a rest!", "Reminder", JOptionPane.WARNING_MESSAGE);
         while(true) {
             try {
@@ -116,6 +170,7 @@ public class EyeCandy {
                 }
                 break;
             } else {
+                sound.warn();
                 JOptionPane.showMessageDialog(null, "Then go for it!", "PLEASE DO", JOptionPane.ERROR_MESSAGE);
             }
         }
