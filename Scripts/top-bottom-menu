@@ -1,0 +1,20 @@
+#!/bin/sh
+TMP='/tmp/top-bottom-whiskey'
+if [ -f "$TMP" ]; then
+    kill `cat "$TMP"`
+    sh -c "sleep 1 && rm '$TMP'" &
+    echo $! > "$TMP"
+    exit
+else
+    touch "$TMP"
+    sh -c "sleep 1 && rm '$TMP'" &
+    echo $! > "$TMP"
+fi
+
+xdotool mousemove_relative 100 -100
+if wmctrl -l | grep 'Whisker Menu'; then
+    # xfce4-popup-whiskermenu
+    true
+else
+    xfce4-popup-whiskermenu
+fi
